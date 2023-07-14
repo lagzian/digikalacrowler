@@ -1,3 +1,8 @@
+# Install Selenium 
+import sys
+!{sys.executable} -m pip install selenium
+
+# Import modules
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 import os
@@ -5,70 +10,60 @@ import smtplib
 from email.message import EmailMessage
 import datetime
 
+# Selenium driver
 options = Options()
 options.headless = True
-
 browser = webdriver.Firefox(options=options)
 
+# Parameters
 url = 'https://www.digikala.com/incredible-offers/'
+keywords = ['روغن', 'هدفون', 'ماوس']
+test_message = "این یک ایمیل آزمایشی است"
+sender = 'your_email@gmail.com'
+recipient = 'recipient@email.com'
+smtp_server = 'smtp.gmail.com'
+smtp_port = 587  
+
+# Load page
 browser.get(url)
-
-import time
-time.sleep(5) 
-
+time.sleep(5)
 source = browser.page_source
-
-from bs4 import BeautifulSoup 
 soup = BeautifulSoup(source, 'html.parser')
 
-keywords = ['روغن', 'هدفون', 'ماوس']
-
-test_message = "این یک ایمیل آزمایشی است"
-sender = 'nimahdx2000@gmail.com'
-recipient = 'tech@zistarvin.ir'
-smtp_server = 'smtp.gmail.com'
-smtp_port = 587
-
+# Check keywords
 keyword_found = False
 for kw in keywords:
   if kw in soup.text:
     keyword_found = True
     break
-    
-browser.close()
+
+# Close browser  
+browser.close()   
+
+# Send emails 
+password = os.environ['EMAIL_PASS']
 
 # Send test email
-message = EmailMessage()
-message['From'] = sender
-message['To'] = recipient  
-message['Subject'] = 'Test Email'
+msg = EmailMessage() 
+msg['From'] = sender
+msg['To'] = recipient
+msg['Subject'] = 'Test Email'
+msg.set_content(test_message)
 
-message.set_content(test_message)
-password = os.environ['EMAIL_PASS']  
-
-smtp = smtplib.SMTP(smtp_server, smtp_port)
-smtp.ehlo()  
+smtp = smtplib.SMTP(smtp_server,smtp_port)
 smtp.starttls()
 smtp.login(sender, password)
-smtp.send_message(message)
+smtp.send_message(msg)
 smtp.quit()
 
 # Send keyword email
 if keyword_found:
-
-  message = EmailMessage()
-  message['From'] = sender
-  message['To'] = recipient
-  message['Subject'] = 'Keyword Found on Website' 
+  msg = EmailMessage()
+  msg['From'] = sender
+  msg['To'] = recipient
+  msg['Subject'] = 'Keyword Found'
+  content = f'Keywords ({keywords}) found on {url}'
+  msg.set_content(content)
   
-  content = f'Keywords ({keywords}) found on {url} on {datetime.datetime.now()}'
-  message.set_content(content)
-  
-  smtp = smtplib.SMTP(smtp_server, smtp_port)
-  smtp.ehlo()
-  smtp.starttls()
-  smtp.login(sender, password)
-  smtp.send_message(message)
-  smtp.quit()
-  
-print('Script execution complete!')
+  smtp.send_message(msg) 
+print('Done')
