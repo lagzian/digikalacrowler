@@ -1,0 +1,22 @@
+name: Check Website
+on:
+  schedule:
+    - cron: '0 */6 * * *' # run every 6 hours
+  workflow_dispatch:
+
+jobs:
+
+  check_site:
+    
+    # Steps to run script omitted for brevity
+
+    steps:
+    - uses: actions/checkout@v2  
+    - name: Set up Python
+      uses: actions/setup-python@v2
+    - name: Install dependencies  
+      run: pip install requests beautifulsoup4 smtplib
+    - name: Run script
+      env:
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+      run: python script.py
