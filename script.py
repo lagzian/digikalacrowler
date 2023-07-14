@@ -1,61 +1,68 @@
+# Specify encoding
+import sys
+sys.setdefaultencoding('utf8') 
+
 import requests
 from bs4 import BeautifulSoup
-import smtplib
+import smtplib  
 from email.message import EmailMessage
 import datetime
 import os
 
 # Set the test message
-test_message = "This is a test mail" 
+test_message = "این یک ایمیل آزمایشی است".encode('utf-8')  
 
 # Set the website URL
-url = 'https://www.digikala.com/incredible-offers/'  
+url = 'https://www.digikala.com/incredible-offers/'
 
-# Set the keywords to search for
+# Set the keywords 
 keywords = ['روغن', 'هدفون', 'ماوس']  
 
-# Set the email parameters
+# Email parameters
 sender = 'nimahdx2000@gmail.com'
 recipient = 'tech@zistarvin.ir'
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 
-# Fetch the website content
+# Fetch website content  
 response = requests.get(url)
-soup = BeautifulSoup(response.text, 'html.parser')
+soup = BeautifulSoup(response.content, 'html.parser', from_encoding='utf-8')
 
-# Check if keywords present  
+# Check for keywords
 keyword_found = False
 for kw in keywords:
   if kw in soup.text:
     keyword_found = True
     break
-
-# Get password from environment variable
+  
+# Get password   
 password = os.environ['EMAIL_PASS']
 
-# Send test email 
+# Send test email
 message = EmailMessage()
 message['From'] = sender
-message['To'] = recipient
+message['To'] = recipient  
 message['Subject'] = 'Test Email'
+message['charset'] = 'utf-8' 
+
 message.set_content(test_message)
 
-smtp = smtplib.SMTP(smtp_server, smtp_port) 
+smtp = smtplib.SMTP(smtp_server, smtp_port)
 smtp.ehlo()
 smtp.starttls()
 smtp.login(sender, password)
-smtp.send_message(message)
+smtp.send_message(message) 
 smtp.quit()
 
-# Send keyword email if found
+# Send keyword email if found  
 if keyword_found:
   message = EmailMessage()
   message['From'] = sender
   message['To'] = recipient
   message['Subject'] = 'Keyword Found on Website'
+  message['charset'] = 'utf-8'
   
-  content = f'Keywords ({keywords}) found on {url} on {datetime.datetime.now()}'
+  content = f'Keywords ({keywords}) found on {url} on {datetime.datetime.now()}'.encode('utf-8')
   message.set_content(content)
   
   smtp = smtplib.SMTP(smtp_server, smtp_port)
