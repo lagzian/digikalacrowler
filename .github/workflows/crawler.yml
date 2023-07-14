@@ -49,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'ماوس', 'macbook', 'iPhone', 'عدس']
+          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'ماوس', 'macbook', 'آیفون']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -68,9 +68,11 @@ jobs:
           service = Service(chrome_driver_path)
           driver = webdriver.Chrome(service=service, options=chrome_options)
 
+          # Initialize variables
           keyword_found = False
           found_keywords = []
 
+          # Check each URL
           for url in urls:
               # Fetch website content
               driver.get(url)
