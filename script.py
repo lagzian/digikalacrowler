@@ -2,11 +2,11 @@ import subprocess
 import sys
 import time
 
-from selenium import webdriver
+from selenium import webdriver 
 from selenium.webdriver.firefox.options import Options
 
 import os
-import smtplib  
+import smtplib
 from email.message import EmailMessage
 import datetime
 from bs4 import BeautifulSoup
@@ -16,50 +16,40 @@ options.add_argument('-headless')
 browser = webdriver.Firefox(options=options)
 
 url = 'https://www.digikala.com/incredible-offers/'
-keywords = ['روغن', 'هدفون', 'ماوس']  
+keywords = ['روغن', 'هدفون', 'ماوس']
 
 browser.get(url)
-time.sleep(5)  
+time.sleep(5)
 source = browser.page_source
 soup = BeautifulSoup(source, 'html.parser')
 
-keyword_found = False
+keyword_found = False 
 for kw in keywords:
   if kw in soup.text:
     keyword_found = True
     break
-
+    
 browser.close()
 
-test_message = "این یک ایمیل آزمایشی است"
+test_message = "این یک ایمیل آزمایشی است"  
 sender = 'nimahdx2000@gmail.com'
 recipient = 'tech@zistarvin.ir'
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 password = os.environ['EMAIL_PASS']
 
-msg = EmailMessage()
-msg['From'] = sender
-msg['To'] = recipient
-msg['Subject'] = 'Test Email'
-msg.set_content(test_message) 
-
-smtp = smtplib.SMTP(smtp_server,smtp_port)
+smtp = smtplib.SMTP(smtp_server, smtp_port)
+smtp.connect() # Connect to SMTP server
+smtp.ehlo()
 smtp.starttls()
 smtp.login(sender, password)
-smtp.send_message(msg) 
+smtp.send_message(msg)
 smtp.quit()
 
 if keyword_found:
 
-  msg = EmailMessage()
-  msg['From'] = sender
-  msg['To'] = recipient
-  msg['Subject'] = 'Keyword Found'
-  
-  content = f'Keywords ({keywords}) found on {url}'
-  msg.set_content(content)
-  
-  smtp.send_message(msg)
+  # Send keyword email 
+  smtp.connect()
+  smtp.send_message(msg) 
 
 print('Done')
