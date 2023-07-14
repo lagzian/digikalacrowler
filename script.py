@@ -9,15 +9,15 @@ import os
 test_message = "This is a test mail" 
 
 # Set the website URL
-url = 'https://www.example.com'  
+url = 'https://www.digikala.com/incredible-offers/'  
 
 # Set the keywords to search for
-keywords = ['keyword1', 'keyword2', 'keyword3']  
+keywords = ['روغن', 'هدفون', 'ماوس']  
 
 # Set the email parameters
-sender = 'sender@example.com'
-recipient = 'recipient@example.com'
-smtp_server = 'smtp.example.com'
+sender = 'nimahdx2000@gmail.com'
+recipient = 'tech@zistarvin.ir'
+smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 
 # Fetch the website content
