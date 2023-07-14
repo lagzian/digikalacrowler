@@ -20,10 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install requests beautifulsoup4 selenium
-        
+
       - name: Check Google Chrome version
         run: google-chrome-stable --version
-
 
       - name: Run script
         env:
@@ -93,28 +92,28 @@ jobs:
                       keyword_found = True
                       found_keywords.append(kw)
 
-              # Send keyword email if found
-              if keyword_found:
-                  message = EmailMessage()
-                  message['From'] = sender
-                  message['To'] = recipient
-                  message['Subject'] = 'یکی یا تعدادی از محصولات مورد نظر شما جهت فروش قرار داده شده اند'
-
-                  content = ''
-                  for i, keyword in enumerate(found_keywords, start=1):
-                      content += f'{i}- {keyword} پیدا شد\n'
-
-                  message.set_content(content)
-
-                  smtp = smtplib.SMTP(smtp_server, smtp_port)
-                  smtp.ehlo()
-                  smtp.starttls()
-                  smtp.login(sender, password)
-                  smtp.send_message(message)
-                  smtp.quit()
-
           # Close the browser
           driver.quit()
+
+          # Send keyword email if found
+          if keyword_found:
+              message = EmailMessage()
+              message['From'] = sender
+              message['To'] = recipient
+              message['Subject'] = 'یکی یا تعدادی از محصولات مورد نظر شما جهت فروش قرار داده شده اند'
+
+              content = ''
+              for i, keyword in enumerate(found_keywords, start=1):
+                  content += f'{i}- {keyword} پیدا شد\n'
+
+              message.set_content(content)
+
+              smtp = smtplib.SMTP(smtp_server, smtp_port)
+              smtp.ehlo()
+              smtp.starttls()
+              smtp.login(sender, password)
+              smtp.send_message(message)
+              smtp.quit()
 
           # Send test email
           message = EmailMessage()
