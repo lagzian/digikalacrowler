@@ -20,9 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: pip install requests beautifulsoup4 selenium
-
+        
       - name: Check Google Chrome version
         run: google-chrome-stable --version
+
 
       - name: Run script
         env:
@@ -48,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'ماوس', 'macbook', 'iPhone', 'عدس', 'دستکش وینیل']
+          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'سرخ', 'macbook', 'iPhone', 'عدس', 'دستکش وینیل']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -67,33 +68,47 @@ jobs:
           service = Service(chrome_driver_path)
           driver = webdriver.Chrome(service=service, options=chrome_options)
 
-          # Get password
-          password = os.environ['EMAIL_PASS']
-
           keyword_found = False
           found_keywords = []
 
           for url in urls:
-              # Fetch website content
-              driver.get(url)
+          # Fetch website content
+          driver.get(url)
 
-              # Wait for the page to fully load (adjust the sleep time as needed)
-              time.sleep(5)
+          # Wait for the page to fully load (adjust the sleep time as needed)
+          time.sleep(5)
+ 
+          # Get the page source
+          page_source = driver.page_source
 
-              # Get the page source
-              page_source = driver.page_source
+          # Parse the page source with BeautifulSoup
+          soup = BeautifulSoup(page_source, 'html.parser')
 
-              # Parse the page source with BeautifulSoup
-              soup = BeautifulSoup(page_source, 'html.parser')
-
-              # Check for keywords
-              for kw in keywords:
-                  if kw in soup.text:
-                      keyword_found = True
-                      found_keywords.append(kw)
+          # Check for keywords
+          for kw in keywords:
+          if kw in soup.text:
+            keyword_found = True
+            found_keywords.append(kw)
 
           # Close the browser
           driver.quit()
+
+          # Get password
+          password = os.environ['EMAIL_PASS']
+
+          # Send test email
+          message = EmailMessage()
+          message['From'] = sender
+          message['To'] = recipient
+          message['Subject'] = 'سایت دیجیکالا توسط ربات چک شد'
+          message.set_content(test_message)
+
+          smtp = smtplib.SMTP(smtp_server, smtp_port)
+          smtp.ehlo()
+          smtp.starttls()
+          smtp.login(sender, password)
+          smtp.send_message(message)
+          smtp.quit()
 
           # Send keyword email if found
           if keyword_found:
@@ -114,20 +129,6 @@ jobs:
               smtp.login(sender, password)
               smtp.send_message(message)
               smtp.quit()
-
-          # Send test email
-          message = EmailMessage()
-          message['From'] = sender
-          message['To'] = recipient
-          message['Subject'] = 'سایت دیجیکالا توسط ربات چک شد'
-          message.set_content(test_message)
-
-          smtp = smtplib.SMTP(smtp_server, smtp_port)
-          smtp.ehlo()
-          smtp.starttls()
-          smtp.login(sender, password)
-          smtp.send_message(message)
-          smtp.quit()
 
           print('Script execution complete!')
           EOF
