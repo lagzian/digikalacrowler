@@ -49,7 +49,7 @@ jobs:
           url = 'https://www.digikala.com/incredible-offers/'
 
           # Set the keywords
-          keywords = ['روغن', 'هدفون', 'ماوس']
+          keywords = ['شقایق', 'میلاد', 'مهرسام']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
