@@ -43,13 +43,13 @@ jobs:
           import time
 
           # Set the test message
-          test_message = "این یک ایمیل آزمایشی است"
+          test_message = "بخش تخفیف های شگفت انگیر سایت در این زمان چک شد و در صورت وجود محصولات مورد نظر در ایمیل بعدی اعلام خواهد شد"
 
           # Set the website URL
           url = 'https://www.digikala.com/incredible-offers/'
 
           # Set the keywords
-          keywords = ['شقایق', 'میلاد', 'مهرسام']
+          keywords = ['روغن سرخ کردنی', 'هدفون بیسیم', 'ماوس']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -85,10 +85,11 @@ jobs:
 
           # Check for keywords
           keyword_found = False
+          found_keywords = []
           for kw in keywords:
               if kw in soup.text:
                   keyword_found = True
-                  break
+                  found_keywords.append(kw)
 
           # Get password
           password = os.environ['EMAIL_PASS']
@@ -97,7 +98,7 @@ jobs:
           message = EmailMessage()
           message['From'] = sender
           message['To'] = recipient
-          message['Subject'] = 'Test Email'
+          message['Subject'] = 'سایت دیجیکالا توسط ربات چک شد'
           message.set_content(test_message)
 
           smtp = smtplib.SMTP(smtp_server, smtp_port)
@@ -112,9 +113,12 @@ jobs:
               message = EmailMessage()
               message['From'] = sender
               message['To'] = recipient
-              message['Subject'] = 'Keyword Found on Website'
+              message['Subject'] = 'یکی یا تعدادی از محصولات مورد نظر شما جهت فروش قرار داده شده اند'
 
-              content = f'Keywords ({keywords}) found on {url} on {datetime.datetime.now()}'
+              content = ''
+              for i, keyword in enumerate(found_keywords, start=1):
+                  content += f'{i}- {keyword} پیدا شد\n'
+
               message.set_content(content)
 
               smtp = smtplib.SMTP(smtp_server, smtp_port)
