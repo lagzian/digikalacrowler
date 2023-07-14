@@ -49,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'نوار', 'macbook', 'iPhone', 'عدس', 'دستکش وینیل']
+          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'ماوس', 'macbook', 'iPhone', 'عدس', 'دستکش وینیل']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -67,6 +67,9 @@ jobs:
           # Create a new Chrome WebDriver
           service = Service(chrome_driver_path)
           driver = webdriver.Chrome(service=service, options=chrome_options)
+
+          # Get password
+          password = os.environ['EMAIL_PASS']
 
           keyword_found = False
           found_keywords = []
@@ -90,11 +93,28 @@ jobs:
                       keyword_found = True
                       found_keywords.append(kw)
 
+              # Send keyword email if found
+              if keyword_found:
+                  message = EmailMessage()
+                  message['From'] = sender
+                  message['To'] = recipient
+                  message['Subject'] = 'یکی یا تعدادی از محصولات مورد نظر شما جهت فروش قرار داده شده اند'
+
+                  content = ''
+                  for i, keyword in enumerate(found_keywords, start=1):
+                      content += f'{i}- {keyword} پیدا شد\n'
+
+                  message.set_content(content)
+
+                  smtp = smtplib.SMTP(smtp_server, smtp_port)
+                  smtp.ehlo()
+                  smtp.starttls()
+                  smtp.login(sender, password)
+                  smtp.send_message(message)
+                  smtp.quit()
+
           # Close the browser
           driver.quit()
-
-          # Get password
-          password = os.environ['EMAIL_PASS']
 
           # Send test email
           message = EmailMessage()
@@ -109,26 +129,6 @@ jobs:
           smtp.login(sender, password)
           smtp.send_message(message)
           smtp.quit()
-
-          # Send keyword email if found
-          if keyword_found:
-              message = EmailMessage()
-              message['From'] = sender
-              message['To'] = recipient
-              message['Subject'] = 'یکی یا تعدادی از محصولات مورد نظر شما جهت فروش قرار داده شده اند'
-
-              content = ''
-              for i, keyword in enumerate(found_keywords, start=1):
-                  content += f'{i}- {keyword} پیدا شد\n'
-
-              message.set_content(content)
-
-              smtp = smtplib.SMTP(smtp_server, smtp_port)
-              smtp.ehlo()
-              smtp.starttls()
-              smtp.login(sender, password)
-              smtp.send_message(message)
-              smtp.quit()
 
           print('Script execution complete!')
           EOF
