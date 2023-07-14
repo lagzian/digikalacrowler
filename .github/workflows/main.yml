@@ -1,4 +1,4 @@
-name: Check Website  
+name: Web Scraper
 
 on:
   schedule:
@@ -7,24 +7,23 @@ on:
 
 jobs:
 
-  check_site:
-
+  scrape:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-      with:
+      with: 
         node-version: 16
         
     - uses: actions/setup-python@v2
       with:
         node-version: 16
         
-    - name: Install dependencies
+    - name: Install dependencies  
       run: |
-        pip install requests beautifulsoup4
+        pip install selenium beautifulsoup4
         
     - name: Run script
       env:
-        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}  
       run: python script.py
