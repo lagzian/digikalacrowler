@@ -110,6 +110,9 @@ jobs:
 
                   message.set_content(content)
 
+                  # Get password
+                  password = os.environ['EMAIL_PASS']
+
                   smtp = smtplib.SMTP(smtp_server, smtp_port)
                   smtp.ehlo()
                   smtp.starttls()
@@ -119,9 +122,6 @@ jobs:
 
           # Close the browser
           driver.quit()
-
-          # Get password
-          password = os.environ['EMAIL_PASS']
 
           # Send test email
           message = EmailMessage()
