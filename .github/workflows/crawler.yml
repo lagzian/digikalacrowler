@@ -45,11 +45,11 @@ jobs:
           # Set the test message
           test_message = "بخش تخفیف های شگفت انگیر سایت در این زمان چک شد و در صورت وجود محصولات مورد نظر در ایمیل بعدی اعلام خواهد شد"
 
-          # Set the website URL
-          url = 'https://www.digikala.com/incredible-offers/'
+          # Set the website URLs
+          urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'ماوس']
+          keywords = ['روغن سرخ کردنی', 'هدفون بی سیم', 'ماوس', 'macbook', 'آیفون']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -68,28 +68,30 @@ jobs:
           service = Service(chrome_driver_path)
           driver = webdriver.Chrome(service=service, options=chrome_options)
 
-          # Fetch website content
-          driver.get(url)
+          keyword_found = False
+          found_keywords = []
 
-          # Wait for the page to fully load (adjust the sleep time as needed)
-          time.sleep(5)
+          for url in urls:
+              # Fetch website content
+              driver.get(url)
 
-          # Get the page source
-          page_source = driver.page_source
+              # Wait for the page to fully load (adjust the sleep time as needed)
+              time.sleep(5)
+
+              # Get the page source
+              page_source = driver.page_source
+
+              # Parse the page source with BeautifulSoup
+              soup = BeautifulSoup(page_source, 'html.parser')
+
+              # Check for keywords
+              for kw in keywords:
+                  if kw in soup.text:
+                      keyword_found = True
+                      found_keywords.append(kw)
 
           # Close the browser
           driver.quit()
-
-          # Parse the page source with BeautifulSoup
-          soup = BeautifulSoup(page_source, 'html.parser')
-
-          # Check for keywords
-          keyword_found = False
-          found_keywords = []
-          for kw in keywords:
-              if kw in soup.text:
-                  keyword_found = True
-                  found_keywords.append(kw)
 
           # Get password
           password = os.environ['EMAIL_PASS']
