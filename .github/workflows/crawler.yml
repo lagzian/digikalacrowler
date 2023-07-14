@@ -1,0 +1,128 @@
+name: Check Website
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Run the workflow every 6 hours
+  workflow_dispatch:
+
+jobs:
+  check_site:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Replace 'x' with the desired Python version
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 selenium
+        
+      - name: Check Google Chrome version
+        run: google-chrome-stable --version
+
+
+      - name: Run script
+        env:
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          CHROME_DRIVER_PATH: ./chromedriver  # Adjust the path if needed
+        run: |
+          python - <<EOF
+          from selenium import webdriver
+          from selenium.webdriver.chrome.service import Service
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+          from bs4 import BeautifulSoup
+          import smtplib
+          from email.message import EmailMessage
+          import datetime
+          import os
+          import time
+
+          # Set the test message
+          test_message = "این یک ایمیل آزمایشی است"
+
+          # Set the website URL
+          url = 'https://www.digikala.com/incredible-offers/'
+
+          # Set the keywords
+          keywords = ['روغن', 'هدفون', 'ماوس']
+
+          # Email parameters
+          sender = 'nimahdx2000@gmail.com'
+          recipient = 'tech@zistarvin.ir'
+          smtp_server = 'smtp.gmail.com'
+          smtp_port = 587
+
+          # Configure Chrome options
+          chrome_options = Options()
+          chrome_options.add_argument("--headless")  # Run Chrome in headless mode (without GUI)
+
+          # Set path to your Chromedriver executable
+          chrome_driver_path = os.getenv('CHROME_DRIVER_PATH')
+
+          # Create a new Chrome WebDriver
+          service = Service(chrome_driver_path)
+          driver = webdriver.Chrome(service=service, options=chrome_options)
+
+          # Fetch website content
+          driver.get(url)
+
+          # Wait for the page to fully load (adjust the sleep time as needed)
+          time.sleep(5)
+
+          # Get the page source
+          page_source = driver.page_source
+
+          # Close the browser
+          driver.quit()
+
+          # Parse the page source with BeautifulSoup
+          soup = BeautifulSoup(page_source, 'html.parser')
+
+          # Check for keywords
+          keyword_found = False
+          for kw in keywords:
+              if kw in soup.text:
+                  keyword_found = True
+                  break
+
+          # Get password
+          password = os.environ['EMAIL_PASS']
+
+          # Send test email
+          message = EmailMessage()
+          message['From'] = sender
+          message['To'] = recipient
+          message['Subject'] = 'Test Email'
+          message.set_content(test_message)
+
+          smtp = smtplib.SMTP(smtp_server, smtp_port)
+          smtp.ehlo()
+          smtp.starttls()
+          smtp.login(sender, password)
+          smtp.send_message(message)
+          smtp.quit()
+
+          # Send keyword email if found
+          if keyword_found:
+              message = EmailMessage()
+              message['From'] = sender
+              message['To'] = recipient
+              message['Subject'] = 'Keyword Found on Website'
+
+              content = f'Keywords ({keywords}) found on {url} on {datetime.datetime.now()}'
+              message.set_content(content)
+
+              smtp = smtplib.SMTP(smtp_server, smtp_port)
+              smtp.ehlo()
+              smtp.starttls()
+              smtp.login(sender, password)
+              smtp.send_message(message)
+              smtp.quit()
+
+          print('Script execution complete!')
+          EOF
