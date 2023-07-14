@@ -1,6 +1,6 @@
-name: Check Website
+name: Check Website  
 
-on: 
+on:
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
@@ -16,8 +16,7 @@ jobs:
       with:
         node-version: 16
         
-    - name: Set up Python 
-      uses: actions/setup-python@v2
+    - uses: actions/setup-python@v2
       with:
         node-version: 16
         
@@ -27,5 +26,5 @@ jobs:
         
     - name: Run script
       env:
-        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}  
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
       run: python script.py
