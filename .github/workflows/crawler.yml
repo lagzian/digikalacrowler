@@ -20,10 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install requests beautifulsoup4 selenium
-        
+
       - name: Check Google Chrome version
         run: google-chrome-stable --version
-
 
       - name: Run script
         env:
@@ -119,10 +118,13 @@ jobs:
 
               content = ''
               for i, keyword in enumerate(found_keywords, start=1):
-                  start_index = soup.text.index(keyword) - 20  # Starting index of the surrounding text
-                  end_index = soup.text.index(keyword) + len(keyword) + 20  # Ending index of the surrounding text
-                  surrounding_text = soup.text[start_index:end_index]
-                  content += f'{i}- "{surrounding_text}" پیدا شد\n'
+                  if keyword in soup.text:
+                      start_index = soup.text.index(keyword) - 20  # Starting index of the surrounding text
+                      end_index = soup.text.index(keyword) + len(keyword) + 20  # Ending index of the surrounding text
+                      surrounding_text = soup.text[start_index:end_index]
+                      content += f'{i}- "{surrounding_text}" پیدا شد\n'
+                  else:
+                      content += f'{i}- "{keyword}" پیدا شد\n'
 
               message.set_content(content)
 
