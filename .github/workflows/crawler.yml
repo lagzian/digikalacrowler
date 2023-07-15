@@ -69,7 +69,7 @@ jobs:
           driver = webdriver.Chrome(service=service, options=chrome_options)
 
           keyword_found = False
-          found_keywords = []
+          found_keywords = set()
 
           for url in urls:
               # Fetch website content
@@ -91,7 +91,10 @@ jobs:
                       # Find the next 3 words after the keyword
                       keyword_index = soup.text.index(kw)
                       next_words = soup.text[keyword_index:].split()[:4][1:]
-                      found_keywords.append((kw, tuple(next_words)))
+                      keyword_tuple = (kw, tuple(next_words))
+                      # Add the keyword tuple to the set if it's not already found
+                      if keyword_tuple not in found_keywords:
+                          found_keywords.add(keyword_tuple)
 
           # Close the browser
           driver.quit()
@@ -121,8 +124,7 @@ jobs:
               message['Subject'] = 'یکی یا تعدادی از محصولات مورد نظر شما جهت فروش قرار داده شده اند'
 
               content = ''
-              unique_keywords = set(found_keywords)  # Keep only unique combinations
-              for i, (keyword, next_words) in enumerate(unique_keywords, start=1):
+              for i, (keyword, next_words) in enumerate(found_keywords, start=1):
                   content += f'{i}- {keyword} {next_words}\n'
 
               message.set_content(content)
