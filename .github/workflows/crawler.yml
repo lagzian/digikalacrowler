@@ -24,9 +24,7 @@ jobs:
       - name: Check Google Chrome version
         run: google-chrome-stable --version
 
-      - name: Clear cache
-        run: rm -rf $HOME/.cache
-      
+
       - name: Run script
         env:
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
@@ -51,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['نبات', 'هدفون بی سیم', 'سرخ', 'خامه صباح', 'روغن سرخ', 'بن مانو', 'شقایق', 'anker', 'macbook', 'iPhone', 'عدس', 'شکلات صبحانه']
+          keywords = ['نبات', 'هدفون بی سیم', 'سرخ', 'پوشک', 'روغن سرخ', 'بن مانو', 'شقایق', 'anker', 'macbook', 'iPhone', 'عدس', 'شکلات صبحانه']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
