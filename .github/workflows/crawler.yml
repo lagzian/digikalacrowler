@@ -76,7 +76,7 @@ jobs:
               driver.get(url)
 
               # Wait for the page to fully load (adjust the sleep time as needed)
-              time.sleep(30)
+              time.sleep(5)
 
               # Get the page source
               page_source = driver.page_source
