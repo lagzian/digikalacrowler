@@ -69,6 +69,7 @@ jobs:
 
           keyword_found = False
           found_keywords = []
+          parsed_content = ""
 
           for url in urls:
               # Fetch website content
@@ -79,6 +80,7 @@ jobs:
 
               # Get the page source
               page_source = driver.page_source
+              parsed_content += page_source  # Append the parsed content
 
               # Parse the page source with BeautifulSoup
               soup = BeautifulSoup(page_source, 'html.parser')
@@ -95,12 +97,12 @@ jobs:
           # Get password
           password = os.environ['EMAIL_PASS']
 
-          # Send test email
+          # Send test email with parsed content
           message = EmailMessage()
           message['From'] = sender
           message['To'] = recipient
-          message['Subject'] = 'سایت دیجیکالا توسط ربات چک شد'
-          message.set_content(test_message)
+          message['Subject'] = 'Parsed Content from Chrome WebDriver'
+          message.set_content(parsed_content)
 
           smtp = smtplib.SMTP(smtp_server, smtp_port)
           smtp.ehlo()
