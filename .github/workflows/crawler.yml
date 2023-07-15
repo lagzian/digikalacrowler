@@ -91,7 +91,7 @@ jobs:
                       # Find the next 3 words after the keyword
                       keyword_index = soup.text.index(kw)
                       next_words = soup.text[keyword_index:].split()[:4][1:]
-                      found_keywords.append((kw, next_words))
+                      found_keywords.append((kw, tuple(next_words)))
 
           # Close the browser
           driver.quit()
