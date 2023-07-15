@@ -84,13 +84,16 @@ jobs:
               # Parse the page source with BeautifulSoup
               soup = BeautifulSoup(page_source, 'html.parser')
 
+              # Get the entire text content
+              text = soup.get_text()
+
               # Check for keywords
               for kw in keywords:
-                  if kw in soup.text:
+                  if kw in text:
                       keyword_found = True
-                      # Find the next 5 words after the keyword
-                      keyword_index = soup.text.index(kw)
-                      next_words = soup.text[keyword_index:].split()[:6][1:]
+                      # Find the next 6 words after the keyword
+                      keyword_index = text.index(kw)
+                      next_words = text[keyword_index:].split()[:7][1:]
                       keyword_tuple = (kw, tuple(next_words))
                       # Add the keyword tuple to the set if it's not already found
                       if keyword_tuple not in found_keywords:
