@@ -41,7 +41,6 @@ jobs:
           import datetime
           import os
           import time
-          import re
 
           # Set the test message
           test_message = "بخش تخفیف های شگفت انگیر سایت در این زمان چک شد و در صورت وجود محصولات مورد نظر در ایمیل بعدی اعلام خواهد شد"
@@ -50,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'کابل', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'عینک', 'کافی']
+          keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'کابل', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'عينک', 'مولتی کافه']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -88,15 +87,14 @@ jobs:
               # Get the entire text content
               text = soup.get_text()
 
-              # Check for keywords using regular expressions
+              # Check for keywords
               for kw in keywords:
-                  regex = rf"\b{re.escape(kw)}\b"
-                  matches = re.findall(regex, text)
-                  for match in matches:
-                      # Find the next 3 words after the keyword
-                      keyword_index = text.index(match)
-                      next_words = text[keyword_index:].split()[:4][1:]
-                      keyword_tuple = (match, tuple(next_words))
+                  if kw in text:
+                      keyword_found = True
+                      # Find the next 6 words after the keyword
+                      keyword_index = text.index(kw)
+                      next_words = text[keyword_index:].split()[:7][1:]
+                      keyword_tuple = (kw, tuple(next_words))
                       # Add the keyword tuple to the set if it's not already found
                       if keyword_tuple not in found_keywords:
                           found_keywords.add(keyword_tuple)
