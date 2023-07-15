@@ -41,7 +41,7 @@ jobs:
           import datetime
           import os
           import time
-
+   
           # Set the test message
           test_message = "بخش تخفیف های شگفت انگیر سایت در این زمان چک شد و در صورت وجود محصولات مورد نظر در ایمیل بعدی اعلام خواهد شد"
 
@@ -49,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'کابل', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'عدس', 'شکلات صبحانه']
+          keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'کابل', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'عینک', 'کافی']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
