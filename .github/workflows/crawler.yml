@@ -119,17 +119,10 @@ jobs:
 
               content = ''
               for i, keyword in enumerate(found_keywords, start=1):
-                  # Find the index of the keyword in the text
-                  index = soup.text.find(keyword)
-                  if index != -1:
-                      # Extract the surrounding words (10 words before and after the keyword)
-                      start_index = max(0, index - 10)
-                      end_index = min(len(soup.text), index + len(keyword) + 10)
-                      surrounding_words = soup.text[start_index:end_index]
-                      # Add the surrounding words to the content with double quotes
-                      content += f'{i}- "{surrounding_words}" پیدا شد\n'
-                  else:
-                      content += f'{i}- "{keyword}" یافت نشد\n'
+                  start_index = soup.text.index(keyword) - 20  # Starting index of the surrounding text
+                  end_index = soup.text.index(keyword) + len(keyword) + 20  # Ending index of the surrounding text
+                  surrounding_text = soup.text[start_index:end_index]
+                  content += f'{i}- "{surrounding_text}" پیدا شد\n'
 
               message.set_content(content)
 
