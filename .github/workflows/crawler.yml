@@ -49,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'خرما', 'بن مانو', 'شقایق', 'anker', 'پنير گودا', 'macbook', 'iPhone', 'عدس', 'شکلات صبحانه']
+          keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'خرما', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'عدس', 'شکلات صبحانه']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -76,7 +76,7 @@ jobs:
               driver.get(url)
 
               # Wait for the page to fully load (adjust the sleep time as needed)
-              time.sleep(15)
+              time.sleep(30)
 
               # Get the page source
               page_source = driver.page_source
@@ -88,9 +88,9 @@ jobs:
               for kw in keywords:
                   if kw in soup.text:
                       keyword_found = True
-                      # Find the next 4 words after the keyword
+                      # Find the next 5 words after the keyword
                       keyword_index = soup.text.index(kw)
-                      next_words = soup.text[keyword_index:].split()[:5][1:]
+                      next_words = soup.text[keyword_index:].split()[:6][1:]
                       keyword_tuple = (kw, tuple(next_words))
                       # Add the keyword tuple to the set if it's not already found
                       if keyword_tuple not in found_keywords:
