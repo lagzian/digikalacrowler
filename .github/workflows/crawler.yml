@@ -20,9 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: pip install requests beautifulsoup4 selenium
-
+        
       - name: Check Google Chrome version
         run: google-chrome-stable --version
+
 
       - name: Run script
         env:
@@ -69,7 +70,6 @@ jobs:
 
           keyword_found = False
           found_keywords = []
-          parsed_content = ""
 
           for url in urls:
               # Fetch website content
@@ -80,7 +80,6 @@ jobs:
 
               # Get the page source
               page_source = driver.page_source
-              parsed_content += page_source  # Append the parsed content
 
               # Parse the page source with BeautifulSoup
               soup = BeautifulSoup(page_source, 'html.parser')
@@ -89,7 +88,10 @@ jobs:
               for kw in keywords:
                   if kw in soup.text:
                       keyword_found = True
-                      found_keywords.append(kw)
+                      # Find the next 3 words after the keyword
+                      keyword_index = soup.text.index(kw)
+                      next_words = soup.text[keyword_index:].split()[:4][1:]
+                      found_keywords.append((kw, next_words))
 
           # Close the browser
           driver.quit()
@@ -97,12 +99,12 @@ jobs:
           # Get password
           password = os.environ['EMAIL_PASS']
 
-          # Send test email with parsed content
+          # Send test email
           message = EmailMessage()
           message['From'] = sender
           message['To'] = recipient
-          message['Subject'] = 'Parsed Content from Chrome WebDriver'
-          message.set_content(parsed_content)
+          message['Subject'] = 'سایت دیجیکالا توسط ربات چک شد'
+          message.set_content(test_message)
 
           smtp = smtplib.SMTP(smtp_server, smtp_port)
           smtp.ehlo()
@@ -119,14 +121,9 @@ jobs:
               message['Subject'] = 'یکی یا تعدادی از محصولات مورد نظر شما جهت فروش قرار داده شده اند'
 
               content = ''
-              for i, keyword in enumerate(found_keywords, start=1):
-                  if keyword in soup.text:
-                      start_index = soup.text.index(keyword) - 20  # Starting index of the surrounding text
-                      end_index = soup.text.index(keyword) + len(keyword) + 20  # Ending index of the surrounding text
-                      surrounding_text = soup.text[start_index:end_index]
-                      content += f'{i}- "{surrounding_text}" پیدا شد\n'
-                  else:
-                      content += f'{i}- "{keyword}" پیدا شد\n'
+              unique_keywords = set(found_keywords)  # Keep only unique combinations
+              for i, (keyword, next_words) in enumerate(unique_keywords, start=1):
+                  content += f'{i}- {keyword} {next_words}\n'
 
               message.set_content(content)
 
