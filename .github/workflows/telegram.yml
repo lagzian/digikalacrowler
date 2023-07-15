@@ -54,8 +54,8 @@ jobs:
           keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'کابل', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'مولتی کافه', 'عینک']
 
           # Telegram parameters
-          bot_token = '6342863185:AAGGV4D9v5p7hXLfi1VEdEisbYCCGLxr39k'
-          chat_id = '111671586'
+          bot_token = os.environ['TELEGRAM_BOT_TOKEN']
+          chat_id = os.environ['TELEGRAM_CHAT_ID']
 
           # Configure Chrome options
           chrome_options = Options()
