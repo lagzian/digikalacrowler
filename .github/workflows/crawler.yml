@@ -88,7 +88,11 @@ jobs:
               for kw in keywords:
                   if kw in soup.text:
                       keyword_found = True
-                      found_keywords.append(kw)
+                      elements = soup.find_all(string=lambda text: kw in text)
+                      for element in elements:
+                          if '"' in element:
+                              phrase = element[element.index('"')+1 : element.rindex('"')]
+                              found_keywords.append(phrase)
 
           # Close the browser
           driver.quit()
