@@ -119,11 +119,14 @@ jobs:
 
               content = ''
               for i, keyword in enumerate(found_keywords, start=1):
-                  start_index = soup.text.index(keyword)
-                  end_index = start_index + len(keyword)
-                  before_keyword = soup.text[start_index-30:start_index]
-                  after_keyword = soup.text[end_index:end_index+30]
-                  content += f'{i}- "{before_keyword}{keyword}{after_keyword}" پیدا شد\n'
+                  if keyword in soup.text:
+                      start_index = soup.text.index(keyword)
+                      end_index = start_index + len(keyword)
+                      before_keyword = soup.text[start_index-30:start_index]
+                      after_keyword = soup.text[end_index:end_index+30]
+                      content += f'{i}- "{before_keyword}{keyword}{after_keyword}" پیدا شد\n'
+                  else:
+                      content += f'{i}- "{keyword}" پیدا شد\n'
 
               message.set_content(content)
 
