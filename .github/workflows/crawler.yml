@@ -49,7 +49,7 @@ jobs:
           urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
           # Set the keywords
-          keywords = ['نبات', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'خرما', 'بن مانو', 'شقایق', 'anker', 'macbook', 'iPhone', 'عدس', 'شکلات صبحانه']
+          keywords = ['مولفیکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'خرما', 'بن مانو', 'شقایق', 'anker', 'macbook', 'iPhone', 'عدس', 'شکلات صبحانه']
 
           # Email parameters
           sender = 'nimahdx2000@gmail.com'
@@ -125,7 +125,7 @@ jobs:
 
               content = ''
               for i, (keyword, next_words) in enumerate(found_keywords, start=1):
-                  content += f'{i}- {keyword} {next_words}\n'
+                  content += f'{i}- {keyword} {next_words} پیدا شد\n'
 
               message.set_content(content)
 
