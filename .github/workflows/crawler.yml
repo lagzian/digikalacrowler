@@ -75,12 +75,10 @@ jobs:
               # Fetch website content
               driver.get(url)
 
-              # Set the implicit wait time for elements to be present
-              driver.implicitly_wait(30)
-
-              # Scroll to the bottom of the page to load dynamically loaded content
-              driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-              time.sleep(5)  # Wait for the content to load
+              # Scroll down the page multiple times to load all content
+              for _ in range(5):
+                  driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                  time.sleep(5)
 
               # Get the page source
               page_source = driver.page_source
