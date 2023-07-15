@@ -72,23 +72,23 @@ jobs:
           found_keywords = []
 
           for url in urls:
-          # Fetch website content
-          driver.get(url)
+              # Fetch website content
+              driver.get(url)
 
-          # Wait for the page to fully load (adjust the sleep time as needed)
-          time.sleep(5)
- 
-          # Get the page source
-          page_source = driver.page_source
+              # Wait for the page to fully load (adjust the sleep time as needed)
+              time.sleep(5)
 
-          # Parse the page source with BeautifulSoup
-          soup = BeautifulSoup(page_source, 'html.parser')
+              # Get the page source
+              page_source = driver.page_source
 
-          # Check for keywords
-          for kw in keywords:
-          if kw in soup.text:
-            keyword_found = True
-            found_keywords.append(kw)
+              # Parse the page source with BeautifulSoup
+              soup = BeautifulSoup(page_source, 'html.parser')
+
+              # Check for keywords
+              for kw in keywords:
+                  if kw in soup.text:
+                      keyword_found = True
+                      found_keywords.append(kw)
 
           # Close the browser
           driver.quit()
