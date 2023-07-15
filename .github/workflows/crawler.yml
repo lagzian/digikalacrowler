@@ -24,7 +24,9 @@ jobs:
       - name: Check Google Chrome version
         run: google-chrome-stable --version
 
-
+      - name: Clear cache
+        run: rm -rf $HOME/.cache
+      
       - name: Run script
         env:
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
