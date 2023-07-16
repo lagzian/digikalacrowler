@@ -78,7 +78,7 @@ jobs:
               # Scroll down the page multiple times to load all content
               for _ in range(10):
                   driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                  time.sleep(20)
+                  time.sleep(10)
 
               # Get the page source
               page_source = driver.page_source
