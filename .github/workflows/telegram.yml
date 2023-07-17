@@ -24,12 +24,13 @@ jobs:
     
     - name: Check Chrome version
       run: google-chrome-stable --version
+      
     - name: Run script
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} 
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         CHROME_DRIVER_PATH: ./chromedriver  
-      run:  
+      run: |
         python - <<EOF
         from selenium import webdriver
         from selenium.webdriver.chrome.service import Service
@@ -73,47 +74,46 @@ jobs:
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         # Original code
-	keyword_found = False
-	found_keywords = set()
+        keyword_found = False
+        found_keywords = set()
 
-	for url in urls:
-
-	# Fetch website content
-	driver.get(url)
+        for url in urls:
+            # Fetch website content
+            driver.get(url)
   
-	# Scroll to load all content
-	for _ in range(5):
-	driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-	time.sleep(2)
+            # Scroll to load all content
+            for _ in range(5):
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(2)
     
-	# Get page source
-	page_source = driver.page_source
+            # Get page source
+            page_source = driver.page_source
   
-	# Parse with BeautifulSoup
-	soup = BeautifulSoup(page_source, 'html.parser')
+            # Parse with BeautifulSoup
+            soup = BeautifulSoup(page_source, 'html.parser')
   
-	# Get text content
-	text = soup.get_text()
+            # Get text content
+            text = soup.get_text()
 
-	# Check for keywords
-	for kw in keywords:
-	if kw in text:
-	keyword_found = True
-	keyword_index = text.index(kw)
-	next_words = text[keyword_index:].split()[:7][1:]
-	keyword_tuple = (kw, tuple(next_words))
-	if keyword_tuple not in found_keywords:
-        found_keywords.add(keyword_tuple)
+            # Check for keywords
+            for kw in keywords:
+                if kw in text:
+                    keyword_found = True
+                    keyword_index = text.index(kw)
+                    next_words = text[keyword_index:].split()[:7][1:]
+                    keyword_tuple = (kw, tuple(next_words))
+                    if keyword_tuple not in found_keywords:
+                        found_keywords.add(keyword_tuple)
         
         # Close browser
         driver.quit()
 
         # Send keyword message if found  
         if keyword_found:
-          content = ''
-          for i, (keyword, next_words) in enumerate(found_keywords, start=1): 
-            content += f'{i}- {keyword} {next_words} پیدا شد\n'
-          bot.send_message(chat_id=chat_id, text=content)
+            content = ''
+            for i, (keyword, next_words) in enumerate(found_keywords, start=1): 
+                content += f'{i}- {keyword} {next_words} پیدا شد\n'
+            bot.send_message(chat_id=chat_id, text=content)
 
         print('Script complete!')
         EOF
