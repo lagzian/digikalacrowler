@@ -2,118 +2,127 @@ name: Check Website_telegram
 
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Run every 6 hours
-  workflow_dispatch: 
+    - cron: '0 */6 * * *'  # Run the workflow every 6 hours
+  workflow_dispatch:
 
 jobs:
   check_site:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python  
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Replace 'x' with the desired Python version
 
-    - name: Install dependencies
-      run: |
-        pip install requests beautifulsoup4 selenium python-telegram-bot
-    
-    - name: Check Chrome version
-      run: google-chrome-stable --version
-      
-    - name: Run script
-      env:
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} 
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        CHROME_DRIVER_PATH: ./chromedriver  
-      run: |
-        python - <<EOF
-        from selenium import webdriver
-        from selenium.webdriver.chrome.service import Service
-        from selenium.webdriver.common.by import By
-        from selenium.webdriver.chrome.options import Options
-        from bs4 import BeautifulSoup
-        import os
-        import time
-        from telegram import Bot
-        import datetime
-
-        # Set test message
-        test_message = "Test message sent at " + str(datetime.datetime.now())
-
-        # Set URLs
-        urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
-
-        # Set keywords
-        keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'کابل', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'مولتی کافه', 'عینک']
-
-        # Telegram params
-        bot_token = os.environ['TELEGRAM_BOT_TOKEN']
-        chat_id = os.environ['TELEGRAM_CHAT_ID']
-
-        # Initialize bot
-        bot = Bot(token=bot_token)
-        print(bot)
-
-        # Send test message  
-        bot.send_message(chat_id=chat_id, text=test_message)
-      
-        # Chrome options
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")
-
-        # Set ChromeDriver path
-        chrome_driver_path = os.getenv('CHROME_DRIVER_PATH')
-
-        # Create Chrome WebDriver
-        service = Service(chrome_driver_path)
-        driver = webdriver.Chrome(service=service, options=chrome_options)
-
-        # Original code
-        keyword_found = False
-        found_keywords = set()
-
-        for url in urls:
-            # Fetch website content
-            driver.get(url)
-  
-            # Scroll to load all content
-            for _ in range(5):
-                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(2)
-    
-            # Get page source
-            page_source = driver.page_source
-  
-            # Parse with BeautifulSoup
-            soup = BeautifulSoup(page_source, 'html.parser')
-  
-            # Get text content
-            text = soup.get_text()
-
-            # Check for keywords
-            for kw in keywords:
-                if kw in text:
-                    keyword_found = True
-                    keyword_index = text.index(kw)
-                    next_words = text[keyword_index:].split()[:7][1:]
-                    keyword_tuple = (kw, tuple(next_words))
-                    if keyword_tuple not in found_keywords:
-                        found_keywords.add(keyword_tuple)
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 selenium python-telegram-bot
         
-        # Close browser
-        driver.quit()
+      - name: Check Google Chrome version
+        run: google-chrome-stable --version
 
-        # Send keyword message if found  
-        if keyword_found:
-            content = ''
-            for i, (keyword, next_words) in enumerate(found_keywords, start=1): 
-                content += f'{i}- {keyword} {next_words} پیدا شد\n'
-            bot.send_message(chat_id=chat_id, text=content)
 
-        print('Script complete!')
-        EOF
+      - name: Run script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CHROME_DRIVER_PATH: ./chromedriver  # Adjust the path if needed
+        run: |
+          python - <<EOF
+          from selenium import webdriver
+          from selenium.webdriver.chrome.service import Service
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+          from bs4 import BeautifulSoup
+          import smtplib
+          from email.message import EmailMessage
+          import datetime
+          import os
+          import time
+          from telegram import Bot
+          import asyncio
+
+          async def send_telegram_message():
+              # Get the bot token from the environment variables
+              bot_token = os.environ['TELEGRAM_BOT_TOKEN']
+
+              # Initialize the bot
+              bot = Bot(token=bot_token)
+
+              # Get the chat ID from the environment variables
+              chat_id = os.environ['TELEGRAM_CHAT_ID']
+
+              # Set the test message
+              test_message = "بخش تخفیف های شگفت انگیر سایت در این زمان چک شد و در صورت وجود محصولات مورد نظر در پیام بعدی اعلام خواهد شد"
+
+              # Send the test message
+              await bot.send_message(chat_id=chat_id, text=test_message)
+
+              # Set the website URLs
+              urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
+
+              # Set the keywords
+              keywords = ['مولفيکس', 'هدفون بی سیم', 'سرخ کردنی', 'پوشک', 'کابل', 'بن مانو', 'لایتنینگ', 'anker', 'خلبانی', 'macbook', 'iPhone', 'مولتی کافه', 'عینک']
+
+              keyword_found = False
+              found_keywords = set()
+
+              # Configure Chrome options
+              chrome_options = Options()
+              chrome_options.add_argument("--headless")  # Run Chrome in headless mode (without GUI)
+
+              # Set path to your Chromedriver executable
+              chrome_driver_path = os.getenv('CHROME_DRIVER_PATH')
+
+              # Create a new Chrome WebDriver
+              service = Service(chrome_driver_path)
+              driver = webdriver.Chrome(service=service, options=chrome_options)
+
+              for url in urls:
+                  # Fetch website content
+                  driver.get(url)
+
+                  # Scroll down the page multiple times to load all content
+                  for _ in range(5):
+                      driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                      time.sleep(10)
+
+                  # Get the page source
+                  page_source = driver.page_source
+
+                  # Parse the page source with BeautifulSoup
+                  soup = BeautifulSoup(page_source, 'html.parser')
+
+                  # Get the entire text content
+                  text = soup.get_text()
+
+                  # Check for keywords
+                  for kw in keywords:
+                      if kw in text:
+                          keyword_found = True
+                          # Find the next 6 words after the keyword
+                          keyword_index = text.index(kw)
+                          next_words = text[keyword_index:].split()[:7][1:]
+                          keyword_tuple = (kw, tuple(next_words))
+                          # Add the keyword tuple to the set if it's not already found
+                          if keyword_tuple not in found_keywords:
+                              found_keywords.add(keyword_tuple)
+
+              # Close the browser
+              driver.quit()
+
+              # Send keyword message if found
+              if keyword_found:
+                  content = ''
+                  for i, (keyword, next_words) in enumerate(found_keywords, start=1):
+                      content += f'{i}- {keyword} {next_words} پیدا شد\n'
+                  await bot.send_message(chat_id=chat_id, text=content)
+
+              print('Script execution complete!')
+
+          # Run the function in an asynchronous event loop
+          asyncio.run(send_telegram_message())
+          EOF
