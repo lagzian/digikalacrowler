@@ -73,37 +73,37 @@ jobs:
         service = Service(chrome_driver_path)
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
-        # Original code...
-		keyword_found = False
-		found_keywords = set()
+        # Original code
+	keyword_found = False
+	found_keywords = set()
 
-		for url in urls:
+	for url in urls:
 
-		# Fetch website content
-		driver.get(url)
+	# Fetch website content
+	driver.get(url)
   
-		# Scroll to load all content
-		for _ in range(5):
-		driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-		time.sleep(2)
+	# Scroll to load all content
+	for _ in range(5):
+	driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+	time.sleep(2)
     
-		# Get page source
-		page_source = driver.page_source
+	# Get page source
+	page_source = driver.page_source
   
-		# Parse with BeautifulSoup
-		soup = BeautifulSoup(page_source, 'html.parser')
+	# Parse with BeautifulSoup
+	soup = BeautifulSoup(page_source, 'html.parser')
   
-		# Get text content
-		text = soup.get_text()
+	# Get text content
+	text = soup.get_text()
 
-		# Check for keywords
-		for kw in keywords:
-		if kw in text:
-		keyword_found = True
-		keyword_index = text.index(kw)
-		next_words = text[keyword_index:].split()[:7][1:]
-		keyword_tuple = (kw, tuple(next_words))
-		if keyword_tuple not in found_keywords:
+	# Check for keywords
+	for kw in keywords:
+	if kw in text:
+	keyword_found = True
+	keyword_index = text.index(kw)
+	next_words = text[keyword_index:].split()[:7][1:]
+	keyword_tuple = (kw, tuple(next_words))
+	if keyword_tuple not in found_keywords:
         found_keywords.add(keyword_tuple)
         
         # Close browser
