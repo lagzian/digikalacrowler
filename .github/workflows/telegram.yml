@@ -30,7 +30,7 @@ jobs:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} 
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         CHROME_DRIVER_PATH: ./chromedriver  
-      run: |  
+      run:  
         python - <<EOF
         from selenium import webdriver
         from selenium.webdriver.chrome.service import Service
