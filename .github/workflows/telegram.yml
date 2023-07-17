@@ -24,7 +24,6 @@ jobs:
     
     - name: Check Chrome version
       run: google-chrome-stable --version
-
     - name: Run script
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }} 
