@@ -2,7 +2,7 @@ name: Check Website_telegram
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Run the workflow every 6 hours
+    - cron: '0 */8 * * *'  # Run the workflow every 6 hours
   workflow_dispatch:
 
 jobs:
