@@ -38,6 +38,7 @@ jobs:
           from telegram import Bot
           import os
           import time
+          import asyncio
 
           # Asynchronous function to send the Telegram message
           async def send_telegram_message():
@@ -54,7 +55,7 @@ jobs:
               test_message = "🔥🔥🔥بخش تخفیف های شگفت انگیر سایت در این زمان چک شد و در صورت وجود محصولات مورد نظر در پیام بعدی اعلام خواهد شد🔥🔥🔥"
 
               # Send the test message
-              bot.send_message(chat_id=chat_id, text=test_message)
+              await bot.send_message(chat_id=chat_id, text=test_message)
 
               # Set the website URLs
               urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
@@ -114,11 +115,10 @@ jobs:
                   content = ''
                   for i, (keyword, next_words) in enumerate(found_keywords, start=1):
                       content += f'{i}- {keyword} {next_words} پیدا شد\n'
-                  bot.send_message(chat_id=chat_id, text=content)
+                  await bot.send_message(chat_id=chat_id, text=content)
 
               print('Script execution complete!')
 
-          # Import asyncio and run the asynchronous function
-          import asyncio
-          asyncio.get_event_loop().run_until_complete(send_telegram_message())
+          # Run the asynchronous function
+          asyncio.run(send_telegram_message())
           EOF
