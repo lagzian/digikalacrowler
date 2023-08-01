@@ -21,10 +21,6 @@ jobs:
       - name: Install dependencies
         run: pip install requests beautifulsoup4 selenium python-telegram-bot
 
-      # Set up Chrome WebDriver provided by GitHub Actions
-      - name: Set up Chrome
-        uses: actions/setup-chrome@v1
-
       - name: Run script
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -122,7 +118,7 @@ jobs:
 
               print('Script execution complete!')
 
-          # Run the asynchronous function
+          # Import asyncio and run the asynchronous function
           import asyncio
-          asyncio.run(send_telegram_message())
+          asyncio.get_event_loop().run_until_complete(send_telegram_message())
           EOF
