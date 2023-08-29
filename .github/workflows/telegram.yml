@@ -61,7 +61,7 @@ jobs:
               urls = ['https://www.digikala.com/incredible-offers/', 'https://www.digikala.com/fresh-offers/']
 
               # Set the keywords
-              keywords = ['گوشی موبایل اپل', 'هدفون بی سیم', 'روغن سرخ کردنی', 'lightning', 'anker', 'هارد', 'بن مانو', 'لایتنینگ انکر', 'انکر مدل', 'مته', 'پنکه', 'کرم بیسکوییت شیررضا', 'قهوه', 'آبمیوه گیری', 'مخلوط کن', 'آون', 'macbook', 'iPhone', 'چای لته بن مانو', 'ماوس']
+              keywords = ['گوشی موبایل اپل', 'هدفون بی سیم', 'روغن سرخ کردنی', 'lightning', 'anker', 'هارد', 'بن مانو', 'لایتنینگ انکر', 'انکر مدل', 'مته', 'پنکه', 'کرم بیسکوییت شیررضا', 'قهوه', 'آبمیوه گیری', 'مخلوط کن', 'آون', 'MacBook', 'iPhone', 'چای لته بن مانو', 'ماوس']
 
               keyword_found = False
               found_keywords = set()
